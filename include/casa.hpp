@@ -12,7 +12,9 @@ class Casa{
     vector<vector<int>> house;
     vector<Mesa> tables;
     pair<int, int> best_table;
-  
+
+    int smaller(vector<int> a);
+    pair<int, int> find_top_bottom(vector<int> a, int j);
     vector<int> set_linha(string l);
     vector<pair<int, int>> max_space();
     vector<pair<int, int>> possible_widths(vector<int> *v);

@@ -55,7 +55,47 @@ void Casa::set_mesas(int mesas){
   }
 }
 
-/***/
+pair<int, int> Casa::find_top_bottom(vector<int> a, int j){
+  int top, bottom;
+  int index = j;
+  int max_index = a.size() - 1;
+  index++;
+
+  while(index <= max_index){
+    if(a[index] == 0){
+       top = index - 1;
+       break; 
+    }
+    index++;
+  }
+  if(index == max_index) top = max_index;
+
+  index = j;
+  while(index >= 0){
+    if(a[index] == 0){
+      top = index - 1;
+      break;
+    }
+    index--;
+  }
+  if(index == 0) bottom = a[0];
+
+  return pair<int, int>(top, bottom);
+}
+
+int Casa::smaller(vector<int> a){
+  int menor = a[0];
+  for(int i = 1; i < a.size(); i++){
+    if(a[i] < menor) menor = a[i];
+  }
+  return menor;
+}
+
+/**
+ * @class Casa
+ * @brief
+ * @return
+*/
 vector<pair<int, int>> Casa::max_space(){
   vector<int> temp;
   vector<pair<int, int>> v;
@@ -64,6 +104,10 @@ vector<pair<int, int>> Casa::max_space(){
   for(int i = 1; i < linhas; i++){
     for(int j = 0; j < colunas; j++){
       if(house[i][j] == 0){
+        pair<int, int> top_bot = this->find_top_bottom(temp, j);
+        int menor = smaller(temp);
+        int larg = top_bot.second - top_bot.first + 1;
+        v.push_back(pair<int, int>(menor, larg));
         temp[j] = 0;
       } 
       else temp[j] += 1;
