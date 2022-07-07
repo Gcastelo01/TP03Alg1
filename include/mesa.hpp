@@ -11,6 +11,7 @@ class Mesa{
     int largura = 0;
     int comprimento = 0;
     int area_total = 0;
+    bool rodou = false;
 
   public:
     Mesa(int largura, int comprimento);
@@ -19,6 +20,7 @@ class Mesa{
     void set_comprimento(int comp);
     bool cabe(vector<pair<int, int>> a);
     int get_area();
+    bool get_rodou();
     pair<int, int> get_dimensions();
 };
 

@@ -16,6 +16,11 @@ void Mesa::gira_mesa(){
   int temp = this->largura;
   this->largura = this->comprimento;
   this->comprimento = temp;
+  this->rodou = true;
+}
+
+bool Mesa::get_rodou(){
+  return this->rodou;
 }
 
 /**

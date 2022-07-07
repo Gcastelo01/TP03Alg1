@@ -104,17 +104,19 @@ vector<pair<int, int>> Casa::max_space(){
   for(int i = 1; i < linhas; i++){
     for(int j = 0; j < colunas; j++){
       if(house[i][j] == 0){
-        pair<int, int> top_bot = this->find_top_bottom(temp, j);
-        int menor = smaller(temp);
-        int larg = top_bot.second - top_bot.first + 1;
-        v.push_back(pair<int, int>(menor, larg));
+        if(house[i-1][j] != 0){
+          pair<int, int> top_bot = this->find_top_bottom(temp, j);
+          int menor = smaller(temp);
+          int larg = top_bot.second - top_bot.first + 1;
+          v.push_back(pair<int, int>(menor, larg));
+        }
         temp[j] = 0;
       } 
       else temp[j] += 1;
     }
   }
-
-   return possible_widths(&temp);
+  
+  return possible_widths(&temp);
 }
 
 /***/
@@ -156,7 +158,11 @@ void Casa::find_best_table(){
   }
 
   this->best_table = tables[maior].get_dimensions();
-  cout << this->best_table.first << " " << this->best_table.second;
+  bool rodou = tables[maior].get_rodou();
+  
+  if(!rodou) cout << this->best_table.first << " " << this->best_table.second;
+  else cout << this->best_table.second << " " << this->best_table.first;
+
 }
 
 /**
