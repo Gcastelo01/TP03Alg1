@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11 
+CFLAGS=-std=c++11 -Wall
 
 EXECULTABLE=./main
 
@@ -24,3 +24,6 @@ clean:
 	rm -rf ./bin/*
 	rm main
 	clear
+
+try:
+	./main < inputs/5.in

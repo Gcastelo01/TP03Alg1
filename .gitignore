@@ -1,7 +1,8 @@
 main
 bin/*.o
-vscode/
+.vscode/
 inputs/
 outputs/
 *.sh
 samples-TP3/
+stresstest_TP3_Alg1/
