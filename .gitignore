@@ -3,3 +3,4 @@ bin/*.o
 vscode/
 inputs/
 outputs/
+*.sh

@@ -14,7 +14,7 @@ class Casa{
     pair<int, int> best_table;
 
     vector<int> set_linha(string l);
-    pair<int, int> max_space();
+    vector<pair<int, int>> max_space();
     pair<int, int> max_rectangle_temp(vector<int> temp);
 
   public:

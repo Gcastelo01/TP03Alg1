@@ -60,10 +60,10 @@ void Casa::set_mesas(int mesas){
  * @brief Acha o retângulo de maiores dimensões na matriz Casa
  * @return vector<pair<int, int> 
 */
-pair<int, int> Casa::max_space(){
+vector<pair<int, int>> Casa::max_space(){
   vector<int> temp;
-  pair<int, int> max_ret = {0, 0};
-  pair<int, int> temp_ret;
+  // pair<int, int> max_ret = {0, 0};
+  vector<pair<int, int>> temp_ret;
 
   temp = house[0];
 
@@ -73,16 +73,23 @@ pair<int, int> Casa::max_space(){
       else temp[j] += 1;
     }
     
-    temp_ret = max_rectangle_temp(temp);
-    if(temp_ret.first * temp_ret.second > max_ret.first * max_ret.second) max_ret = temp_ret;
+    temp_ret.push_back(max_rectangle_temp(temp));
+    // if(temp_ret.first * temp_ret.second > max_ret.first * max_ret.second) max_ret = temp_ret;
   }
-  
-  return max_ret;
+  // cout << "==========" << endl;
+  // for(int i = 0; i < temp_ret.size(); i++) cout << temp_ret[i].first << " " << temp_ret[i].second << endl;
+  return temp_ret;
 }
 
+/**
+ * @class Casa
+ * @brief encontra o maior retângulo possível dentro do espaço livre para a casa
+ * @param temp vetor com as dimensões momentaneas da casa
+ * @return pair<int, int> par com (comprimento, largura) do maior retângulo
+ * 
+*/
 pair<int, int> Casa::max_rectangle_temp(vector<int> temp){
   vector<int> pilha;
-  vector<vector<int>> subvetores;
   vector<pair<int, int>> abc;
   int last = 0;
 
@@ -143,7 +150,7 @@ pair<int, int> Casa::max_rectangle_temp(vector<int> temp){
  * 
 */
 void Casa::find_best_table(){
-  pair<int, int> espacos = this->max_space();
+  vector<pair<int, int>> espacos = this->max_space();
   vector<Mesa> mesas_viaveis;
 
   for(int i = 0; i < tables.size(); i++){
