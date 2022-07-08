@@ -18,7 +18,7 @@ class Mesa{
     void gira_mesa();
     void set_largura(int larg);
     void set_comprimento(int comp);
-    bool cabe(vector<pair<int, int>> a);
+    bool cabe(pair<int, int> a);
     int get_area();
     bool get_rodou();
     pair<int, int> get_dimensions();

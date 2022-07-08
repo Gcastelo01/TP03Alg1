@@ -13,19 +13,14 @@ class Casa{
     vector<Mesa> tables;
     pair<int, int> best_table;
 
-    int smaller(vector<int> a);
-    pair<int, int> find_top_bottom(vector<int> a, int j);
     vector<int> set_linha(string l);
-    vector<pair<int, int>> max_space();
-    vector<pair<int, int>> possible_widths(vector<int> *v);
-
+    pair<int, int> max_space();
+    pair<int, int> max_rectangle_temp(vector<int> temp);
 
   public:
     void find_best_table();
     void set_mesas(int mesas);
     void set_casa(int linhas, int colunas);
-    void debug_info();
-
 };
 
 #endif

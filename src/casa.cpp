@@ -55,94 +55,106 @@ void Casa::set_mesas(int mesas){
   }
 }
 
-pair<int, int> Casa::find_top_bottom(vector<int> a, int j){
-  int top, bottom;
-  int index = j;
-  int max_index = a.size() - 1;
-  index++;
-
-  while(index <= max_index){
-    if(a[index] == 0){
-       top = index - 1;
-       break; 
-    }
-    index++;
-  }
-  if(index == max_index) top = max_index;
-
-  index = j;
-  while(index >= 0){
-    if(a[index] == 0){
-      top = index - 1;
-      break;
-    }
-    index--;
-  }
-  if(index == 0) bottom = a[0];
-
-  return pair<int, int>(top, bottom);
-}
-
-int Casa::smaller(vector<int> a){
-  int menor = a[0];
-  for(int i = 1; i < a.size(); i++){
-    if(a[i] < menor) menor = a[i];
-  }
-  return menor;
-}
-
 /**
  * @class Casa
- * @brief
- * @return
+ * @brief Acha o retângulo de maiores dimensões na matriz Casa
+ * @return vector<pair<int, int> 
 */
-vector<pair<int, int>> Casa::max_space(){
+pair<int, int> Casa::max_space(){
   vector<int> temp;
-  vector<pair<int, int>> v;
+  pair<int, int> max_ret = {0, 0};
+  pair<int, int> temp_ret;
+
   temp = house[0];
-  
+
   for(int i = 1; i < linhas; i++){
     for(int j = 0; j < colunas; j++){
-      if(house[i][j] == 0){
-        if(house[i-1][j] != 0){
-          pair<int, int> top_bot = this->find_top_bottom(temp, j);
-          int menor = smaller(temp);
-          int larg = top_bot.second - top_bot.first + 1;
-          v.push_back(pair<int, int>(menor, larg));
-        }
-        temp[j] = 0;
-      } 
+      if(house[i][j] == 0) temp[j] = 0;
       else temp[j] += 1;
     }
+    
+    temp_ret = max_rectangle_temp(temp);
+    if(temp_ret.first * temp_ret.second > max_ret.first * max_ret.second) max_ret = temp_ret;
   }
   
-  return possible_widths(&temp);
+  return max_ret;
 }
 
-/***/
-vector<pair<int, int>> Casa::possible_widths(vector<int> *v){
-  vector<pair<int, int>> pares;
-  int temp, larg, alt = 0;
-  
-  for(vector<int>::iterator i = v->begin(); i != v->end(); i++){
-    if(*i == 0){
-      larg = temp;
-      pares.push_back(pair<int, int>(larg, alt));
-      temp = 0;
-      alt = 0;
-    }else{
-      if(*i < alt) alt = *i;
-      temp += 1;
-    } 
-  } 
-  return pares;
+pair<int, int> Casa::max_rectangle_temp(vector<int> temp){
+  vector<int> pilha;
+  vector<vector<int>> subvetores;
+  vector<pair<int, int>> abc;
+  int last = 0;
+
+  int max_area = -1;
+  pair<int, int> max_measures = {0, 0};
+
+  // for(int i = 0; i < temp.size(); i++){
+  //   if(temp[i] == 0){
+  //     vector<int> t;
+  //     for(int j = last + 1; j < i; j++) t.push_back(temp[j]);
+  //     subvetores.push_back(t);
+  //     last = i;
+  //   }
+  // }
+
+  // for(int z = 0; z < subvetores.size(); z++){    
+  //   if(subvetores[z].size() > 0){
+  int x;
+  for(x = 0; x < temp.size();){
+    if(pilha.empty() || temp[x] >= temp[pilha[pilha.size() - 1]]){
+      pilha.push_back(x++);
+    }
+    else{
+      int top = pilha[pilha.size() - 1];
+      pilha.pop_back();
+
+      if(pilha.empty()){
+        pair<int, int> t(x, temp[top]);
+        int area = t.first * t.second;
+        if(area > max_area){
+          max_measures = t;
+          max_area = area;
+        }
+      }else{
+        pair<int, int> t(x - pilha[pilha.size() - 1] - 1, temp[top]);
+        int area = t.first * t.second;
+        if(area > max_area){
+          max_measures = t;
+          max_area = area;
+        }
+      }
+    }
+  }
+
+  while (!pilha.empty()){
+      int top = pilha[pilha.size() - 1];
+      pilha.pop_back();
+
+      if(pilha.empty()){
+        pair<int, int> t(x, temp[top]);
+        int area = t.first * t.second;
+        if(area > max_area){
+          max_measures = t;
+          max_area = area;
+        }
+      }else{
+        pair<int, int> t(x - pilha[pilha.size() - 1] - 1, temp[top]);
+        int area = t.first * t.second;
+        if(area > max_area){
+          max_measures = t;
+          max_area = area;
+        }
+      }
+    }
+  return max_measures;
 }
 
 /**
  * 
 */
 void Casa::find_best_table(){
-  vector<pair<int, int>> espacos = this->max_space();
+  pair<int, int> espacos = this->max_space();
   vector<Mesa> mesas_viaveis;
 
   for(int i = 0; i < tables.size(); i++){
@@ -150,39 +162,17 @@ void Casa::find_best_table(){
   }
 
   int maior = 0;
-  for(int i = 1; i < tables.size(); i++){
-    if(tables[i].get_area() > tables[maior].get_area()) maior = i;
-    else if(tables[i].get_area() == tables[maior].get_area()){
-      if(tables[maior].get_dimensions().first < tables[i].get_dimensions().first) maior = i;
+  for(int i = 1; i < mesas_viaveis.size(); i++){
+    if(mesas_viaveis[i].get_area() > mesas_viaveis[maior].get_area()) maior = i;
+    else if(mesas_viaveis[i].get_area() == mesas_viaveis[maior].get_area()){
+      if(mesas_viaveis[maior].get_dimensions().first < mesas_viaveis[i].get_dimensions().first) maior = i;
     }
   }
 
-  this->best_table = tables[maior].get_dimensions();
-  bool rodou = tables[maior].get_rodou();
-  
+  this->best_table = mesas_viaveis[maior].get_dimensions();
+  bool rodou = mesas_viaveis[maior].get_rodou();
+
   if(!rodou) cout << this->best_table.first << " " << this->best_table.second;
   else cout << this->best_table.second << " " << this->best_table.first;
 
-}
-
-/**
- * @class Casa
- * @brief Utilizado apenas para verificar resultados :)
-*/
-void Casa::debug_info(){
-  cout << "| INFORMAÇÕES DA CASA |" << endl;
-  for(vector<vector<int>>::iterator i = house.begin(); i != house.end(); i++){
-    for(vector<int>::iterator j = i->begin(); j != i->end(); j++){
-      cout << *j;
-    }
-    cout << endl;
-  }
-
-  cout << "Mesas cotadas: " << tables.size() << endl;
-  cout << "| Dimensões das mesas |" << endl;
-  for(vector<Mesa>::iterator i = tables.begin(); i != tables.end(); i++){
-    cout << i->get_dimensions().first << " x " << i->get_dimensions().second << endl;
-  }
-
-  cout << "Melhor mesa possível: " << best_table.first << " x " << best_table.second << endl;
 }

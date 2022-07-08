@@ -50,16 +50,13 @@ pair<int, int> Mesa::get_dimensions(){
   return pair<int, int>(comprimento, largura);
 }
 
-bool Mesa::cabe(vector<pair<int, int>> a){
-  for(vector<pair<int, int>>::iterator i = a.begin(); i != a.end(); i++){
-    if(i->first >= this->largura && i->second >= this->comprimento) return true;
-    else{
-      this->gira_mesa();
-      if(i->first >= this->largura && i->second >= this->comprimento) return true;
-      return false;
-    }
+bool Mesa::cabe(pair<int, int> a){
+  if(a.first >= this->largura && a.second >= this->comprimento) return true;
+  else{
+    this->gira_mesa();
+    if(a.first >= this->largura && a.second >= this->comprimento) return true;
+    return false;
   }
-  return false;
 }
 
 int Mesa::get_area(){
