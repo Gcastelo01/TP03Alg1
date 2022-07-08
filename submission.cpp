@@ -1,5 +1,46 @@
-#include "casa.hpp"
+#include <string>
+#include <map>
+#include <vector>
 #include <iostream>
+
+using namespace std;
+
+class Mesa{
+  private:
+    int largura = 0;
+    int comprimento = 0;
+    int area_total = 0;
+    bool rodou = false;
+
+  public:
+    Mesa(int largura, int comprimento);
+    void gira_mesa();
+    void set_largura(int larg);
+    void set_comprimento(int comp);
+    bool cabe(pair<int, int> a);
+    int get_area();
+    bool get_rodou();
+    pair<int, int> get_dimensions();
+};
+
+class Casa{
+  private:
+    int linhas = 0;
+    int colunas = 0;
+    vector<vector<int>> house;
+    vector<Mesa> tables;
+    pair<int, int> best_table;
+
+    vector<int> set_linha(string l);
+    pair<int, int> max_space();
+    pair<int, int> max_rectangle_temp(vector<int> temp);
+
+  public:
+    void find_best_table();
+    void set_mesas(int mesas);
+    void set_casa(int linhas, int colunas);
+};
+
 
 /**
  * @class Casa
@@ -164,4 +205,82 @@ void Casa::find_best_table(){
   if(!rodou) cout << this->best_table.first << " " << this->best_table.second;
   else cout << this->best_table.second << " " << this->best_table.first;
 
+}
+
+/**
+ * @class Mesa
+ * @brief Construtor da calsse
+*/
+Mesa::Mesa(int largura, int comprimento) : largura(largura), comprimento(comprimento){
+  this->area_total = largura * comprimento;
+}
+
+/**
+ * @class Mesa
+ * @brief Rotaciona a mesa em 90 graus, invertendo largura e comprimento.
+*/
+void Mesa::gira_mesa(){
+  int temp = this->largura;
+  this->largura = this->comprimento;
+  this->comprimento = temp;
+  this->rodou = true;
+}
+
+bool Mesa::get_rodou(){
+  return this->rodou;
+}
+
+/**
+ * @class Mesa
+ * @brief Coloca um valor no atributo comprimento
+ * @param comp Comprimento da mesa
+*/
+void Mesa::set_comprimento(int comp){
+  this->comprimento = comp;
+}
+
+/**
+ * @class Mesa
+ * @brief Coloca uma valor no atributo largura
+ * @param larg Largura da mesa
+*/
+void Mesa::set_largura(int larg){
+  this->largura = larg;
+}
+
+/**
+ * @class Mesa
+ * @brief Gera um par com as dimensões da mesa (comprimento, largura)
+ * @return pair<int, int> com as dimensões
+*/
+pair<int, int> Mesa::get_dimensions(){
+  return pair<int, int>(comprimento, largura);
+}
+
+bool Mesa::cabe(pair<int, int> a){
+  if(a.first >= this->largura && a.second >= this->comprimento) return true;
+  else{
+    this->gira_mesa();
+    if(a.first >= this->largura && a.second >= this->comprimento) return true;
+    return false;
+  }
+}
+
+int Mesa::get_area(){
+  return this->area_total;
+}
+
+int main(int argc, char* argv[]){
+  Casa haus;
+  int linhas, colunas;
+
+  cin >> linhas >> colunas;
+  haus.set_casa(linhas, colunas);
+
+  cin >> linhas;
+
+  haus.set_mesas(linhas);
+  haus.find_best_table();
+
+  return 0;
 }
